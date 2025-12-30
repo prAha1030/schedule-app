@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class ScheduleController {
@@ -24,5 +26,14 @@ public class ScheduleController {
     @GetMapping("/schedules/{scheduleId}")
     public ResponseEntity<GetOneScheduleResponse> getOneSchedule(@PathVariable Long scheduleId) {
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getOne(scheduleId));
+    }
+
+    // 일정 다건 조회
+    @GetMapping("/schedules")
+    public ResponseEntity<List<GetOneScheduleResponse>> getAllSchedule(@RequestParam(required = false) String username) {
+        if (username != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getFilter(username));
+        }
+        else {return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getAll());}
     }
 }
