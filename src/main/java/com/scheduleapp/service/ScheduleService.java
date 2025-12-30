@@ -6,8 +6,14 @@ import com.scheduleapp.dto.GetOneScheduleResponse;
 import com.scheduleapp.entity.Schedule;
 import com.scheduleapp.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -48,5 +54,44 @@ public class ScheduleService {
                 schedule.getCreatedAt(),
                 schedule.getModifiedAt()
         );
+    }
+
+    // 일정 다건 조회 / 전체 / 수정일 기준으로 내림차순 정렬 후 변환
+    @Transactional
+    public List<GetOneScheduleResponse> getAll() {
+        List<Schedule> allSchedules = scheduleRepository.findAll(Sort.by(Sort.Direction.DESC,"modifiedAt"));
+        List<GetOneScheduleResponse> dtos = new ArrayList<>();
+        for (Schedule allSchedule : allSchedules) {
+            GetOneScheduleResponse dto = new GetOneScheduleResponse(
+                    allSchedule.getId(),
+                    allSchedule.getTitle(),
+                    allSchedule.getContents(),
+                    allSchedule.getUsername(),
+                    allSchedule.getCreatedAt(),
+                    allSchedule.getModifiedAt()
+            );
+            dtos.add(dto);
+        }
+        return dtos;
+    }
+
+    // 일정 다건 조회 / 특정 작성자명의 일정 목록 / 수정일 기준으로 내림차순 정렬 후 변환
+    @Transactional
+    public List<GetOneScheduleResponse> getFilter(String username) {
+        List<Schedule> filterSchedules = scheduleRepository.findAll(Sort.by(Sort.Direction.DESC, "modifiedAt"))
+                .stream().filter(s -> s.getUsername().equals(username)).toList();
+        List<GetOneScheduleResponse> dtos = new ArrayList<>();
+        for (Schedule filterSchedule : filterSchedules) {
+            GetOneScheduleResponse dto = new GetOneScheduleResponse(
+                    filterSchedule.getId(),
+                    filterSchedule.getTitle(),
+                    filterSchedule.getContents(),
+                    filterSchedule.getUsername(),
+                    filterSchedule.getCreatedAt(),
+                    filterSchedule.getModifiedAt()
+            );
+            dtos.add(dto);
+        }
+        return dtos;
     }
 }
