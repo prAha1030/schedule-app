@@ -28,24 +28,17 @@ public class Schedule {
     private LocalDateTime scheduleUpdateAt;
 
     // 생성자
-    public Schedule(Long scheduleId, String title, String contents, String username, String password,
-                    LocalDateTime scheduleCreateAt, LocalDateTime scheduleUpdateAt) {
-        this.scheduleId = scheduleId;
+    public Schedule(String title, String contents, String username, String password) {
         this.title = title;
         this.contents = contents;
         this.username = username;
         this.password = password;
-        this.scheduleCreateAt = scheduleCreateAt;
-        this.scheduleUpdateAt = scheduleUpdateAt;
     }
     // 세터
-    public void update(String title, String contents, String username, String password,
-                       LocalDateTime scheduleCreateAt, LocalDateTime scheduleUpdateAt) {
+    public void update(String title, String contents, String username, String password) {
         this.title = title;
         this.contents = contents;
         this.username = username;
         this.password = password;
-        this.scheduleCreateAt = scheduleCreateAt;
-        this.scheduleUpdateAt = scheduleUpdateAt;
     }
 }
