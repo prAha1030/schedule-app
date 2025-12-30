@@ -23,10 +23,12 @@ public class ScheduleService {
         );
         Schedule savedSchedule = scheduleRepository.save(schedule);
         return new CreateScheduleResponse(
-                savedSchedule.getScheduleId(),
+                savedSchedule.getId(),
                 savedSchedule.getTitle(),
                 savedSchedule.getContents(),
-                savedSchedule.getUsername()
+                savedSchedule.getUsername(),
+                savedSchedule.getCreatedAt(),
+                savedSchedule.getModifiedAt()
         );
     }
 }

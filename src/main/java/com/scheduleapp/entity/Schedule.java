@@ -11,11 +11,11 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "schedules")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Schedule {
+public class Schedule extends BaseEntity{
     // 고유 식별 번호, 일정 제목, 일정 내용, 작성자명, 비밀번호, 작성일, 수정일
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long scheduleId;
+    private Long id;
     @Column(length = 30, nullable = false)
     private String title;
     @Column(length = 200, nullable = false)
@@ -24,8 +24,6 @@ public class Schedule {
     private String username;
     @Column(length = 20, nullable = false)
     private String password;
-    private LocalDateTime scheduleCreateAt;
-    private LocalDateTime scheduleUpdateAt;
 
     // 생성자
     public Schedule(String title, String contents, String username, String password) {
