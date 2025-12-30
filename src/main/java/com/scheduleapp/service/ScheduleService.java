@@ -26,8 +26,7 @@ public class ScheduleService {
                 savedSchedule.getScheduleId(),
                 savedSchedule.getTitle(),
                 savedSchedule.getContents(),
-                savedSchedule.getUsername(),
-                savedSchedule.getPassword()
+                savedSchedule.getUsername()
         );
     }
 }
