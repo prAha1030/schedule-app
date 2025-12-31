@@ -10,16 +10,16 @@ public class CreateScheduleResponse {
     private final String title;
     private final String contents;
     private final String username;
-    private final LocalDateTime scheduleCreateAt;
-    private final LocalDateTime scheduleUpdateAt;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime modifiedAt;
 
     public CreateScheduleResponse(Long id, String title, String contents, String username,
-                                  LocalDateTime scheduleCreateAt, LocalDateTime scheduleUpdateAt) {
+                                  LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.id = id;
         this.title = title;
         this.contents = contents;
         this.username = username;
-        this.scheduleCreateAt = scheduleCreateAt;
-        this.scheduleUpdateAt = scheduleUpdateAt;
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
     }
 }
