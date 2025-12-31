@@ -3,9 +3,8 @@ package com.scheduleapp.dto;
 import lombok.Getter;
 
 @Getter
-public class CreateScheduleRequest {
-    // 일정 제목, 일정 내용, 작성자명, 비밀번호 요청
-    private String title;
+public class CreateCommentRequest {
+    // 댓글 내용, 작성자명, 비밀번호 요청
     private String contents;
     private String username;
     private String password;

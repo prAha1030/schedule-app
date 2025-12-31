@@ -5,18 +5,17 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class GetOneScheduleResponse {
-    // 일정 고유 식별자, 일정 제목, 일정 내용, 작성자명, 작성일, 수정일
-    private final Long id;
-    private final String title;
+public class CreateCommentResponse {
+    // 일정 고유 식별자, 댓글 내용, 작성자명, 비밀번호, 작성일, 수정일 응답
+    private final Long scheduleId;
     private final String contents;
     private final String username;
     private final LocalDateTime createdAt;
     private final LocalDateTime modifiedAt;
 
-    public GetOneScheduleResponse(Long id, String title, String contents, String username, LocalDateTime createdAt, LocalDateTime modifiedAt) {
-        this.id = id;
-        this.title = title;
+    public CreateCommentResponse(Long scheduleId, String contents, String username,
+                                 LocalDateTime createdAt, LocalDateTime modifiedAt) {
+        this.scheduleId = scheduleId;
         this.contents = contents;
         this.username = username;
         this.createdAt = createdAt;

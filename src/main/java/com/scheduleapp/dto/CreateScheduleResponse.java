@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 @Getter
 public class CreateScheduleResponse {
+    // 일정 고유 식별자, 일정 제목, 일정 내용, 작성자명, 작성일, 수정일 응답
     private final Long id;
     private final String title;
     private final String contents;
