@@ -5,6 +5,8 @@ import com.scheduleapp.entity.Schedule;
 import com.scheduleapp.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -106,5 +108,16 @@ public class ScheduleService {
                 schedule.getContents(),
                 schedule.getUsername()
         );
+    }
+
+    // 일정 삭제를 위한 비밀번호 확인 후 삭제
+    @Transactional
+    public void delete(Long scheduleId, DeleteScheduleRequest request) {
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
+                () -> new IllegalStateException("존재하지 않는 일정입니다.")
+        );
+        if (request.getPassword().equals(schedule.getPassword())) {
+            scheduleRepository.delete(schedule);
+        }
     }
 }

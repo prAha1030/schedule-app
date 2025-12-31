@@ -41,4 +41,13 @@ public class ScheduleController {
                                                                  @RequestBody UpdateScheduleRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.updateOne(scheduleId, request));
     }
+
+    // 일정 삭제
+    // TODO 비밀번호 미일치 시 삭제는 안되지만 응답이 204로 나옴
+    @DeleteMapping("/schedules/{scheduleId}")
+    public ResponseEntity<Void> deleteSchedule(@PathVariable Long scheduleId,
+                                               @RequestBody DeleteScheduleRequest request) {
+        scheduleService.delete(scheduleId, request);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }
