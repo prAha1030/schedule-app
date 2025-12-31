@@ -1,7 +1,9 @@
 package com.scheduleapp.service;
 
 import com.scheduleapp.dto.*;
+import com.scheduleapp.entity.Comment;
 import com.scheduleapp.entity.Schedule;
+import com.scheduleapp.repository.CommentRepository;
 import com.scheduleapp.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -15,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
+    private final CommentRepository commentRepository;
 
     // 일정 생성을 위한 정보를 저장 후 변환
     @Transactional
@@ -36,29 +39,43 @@ public class ScheduleService {
         );
     }
 
-    // 일정 단건 조회를 위한 정보 탐색 후 변환
-    @Transactional
+    // 일정 단건 조회를 위한 정보 탐색 후 변환 / 댓글도 함께 응답
+    @Transactional(readOnly = true)
     public GetOneScheduleResponse getOne(Long scheduleId) {
         Schedule schedule = scheduleRepository.findById((scheduleId)).orElseThrow(
                 () -> new IllegalStateException("존재하지 않는 일정입니다.")
         );
+        // 해당 일정의 댓글들 내림차순 정렬 후 변환
+        List<Comment> comments = commentRepository.findByScheduleOrderByModifiedAtDesc(schedule);
+        List<CreateCommentResponse> dtos = new ArrayList<>();
+        for (Comment comment : comments) {
+            CreateCommentResponse dto = new CreateCommentResponse(
+                    comment.getSchedule().getId(),
+                    comment.getContents(),
+                    comment.getUsername(),
+                    comment.getCreatedAt(),
+                    comment.getModifiedAt()
+            );
+            dtos.add(dto);
+        }
         return new GetOneScheduleResponse(
                 schedule.getId(),
                 schedule.getTitle(),
                 schedule.getContents(),
                 schedule.getUsername(),
                 schedule.getCreatedAt(),
-                schedule.getModifiedAt()
+                schedule.getModifiedAt(),
+                dtos
         );
     }
 
     // 일정 다건 조회 / 전체 / 수정일 기준으로 내림차순 정렬 후 변환
-    @Transactional
-    public List<GetOneScheduleResponse> getAll() {
+    @Transactional(readOnly = true)
+    public List<GetManyScheduleResponse> getAll() {
         List<Schedule> allSchedules = scheduleRepository.findAll(Sort.by(Sort.Direction.DESC,"modifiedAt"));
-        List<GetOneScheduleResponse> dtos = new ArrayList<>();
+        List<GetManyScheduleResponse> dtos = new ArrayList<>();
         for (Schedule allSchedule : allSchedules) {
-            GetOneScheduleResponse dto = new GetOneScheduleResponse(
+            GetManyScheduleResponse dto = new GetManyScheduleResponse(
                     allSchedule.getId(),
                     allSchedule.getTitle(),
                     allSchedule.getContents(),
@@ -72,13 +89,13 @@ public class ScheduleService {
     }
 
     // 일정 다건 조회 / 특정 작성자명의 일정 목록 / 수정일 기준으로 내림차순 정렬 후 변환
-    @Transactional
-    public List<GetOneScheduleResponse> getFilter(String username) {
+    @Transactional(readOnly = true)
+    public List<GetManyScheduleResponse> getFilter(String username) {
         List<Schedule> filterSchedules = scheduleRepository.findAll(Sort.by(Sort.Direction.DESC, "modifiedAt"))
                 .stream().filter(s -> s.getUsername().equals(username)).toList();
-        List<GetOneScheduleResponse> dtos = new ArrayList<>();
+        List<GetManyScheduleResponse> dtos = new ArrayList<>();
         for (Schedule filterSchedule : filterSchedules) {
-            GetOneScheduleResponse dto = new GetOneScheduleResponse(
+            GetManyScheduleResponse dto = new GetManyScheduleResponse(
                     filterSchedule.getId(),
                     filterSchedule.getTitle(),
                     filterSchedule.getContents(),
