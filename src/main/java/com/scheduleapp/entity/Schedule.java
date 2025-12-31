@@ -5,8 +5,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Entity
 @Table(name = "schedules")
@@ -32,11 +30,9 @@ public class Schedule extends BaseEntity{
         this.username = username;
         this.password = password;
     }
-    // 세터
-    public void update(String title, String contents, String username, String password) {
+    // 일정 제목, 작성자명 수정
+    public void update(String title, String username) {
         this.title = title;
-        this.contents = contents;
         this.username = username;
-        this.password = password;
     }
 }

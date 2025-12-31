@@ -1,8 +1,6 @@
 package com.scheduleapp.service;
 
-import com.scheduleapp.dto.CreateScheduleRequest;
-import com.scheduleapp.dto.CreateScheduleResponse;
-import com.scheduleapp.dto.GetOneScheduleResponse;
+import com.scheduleapp.dto.*;
 import com.scheduleapp.entity.Schedule;
 import com.scheduleapp.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,9 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -93,5 +89,22 @@ public class ScheduleService {
             dtos.add(dto);
         }
         return dtos;
+    }
+
+    // 일정 수정 후 변환 / 비밀번호 미일치 시 미수정
+    @Transactional
+    public UpdateScheduleResponse updateOne(Long scheduleId, UpdateScheduleRequest request) {
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
+                () -> new IllegalStateException("존재하지 않는 일정입니다.")
+        );
+        if (request.getPassword().equals(schedule.getPassword())) {
+            schedule.update(request.getTitle(), request.getUsername());
+        }
+        return new UpdateScheduleResponse(
+                schedule.getId(),
+                schedule.getTitle(),
+                schedule.getContents(),
+                schedule.getUsername()
+        );
     }
 }
