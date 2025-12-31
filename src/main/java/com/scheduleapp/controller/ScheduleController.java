@@ -28,7 +28,7 @@ public class ScheduleController {
 
     // 일정 다건 조회
     @GetMapping("/schedules")
-    public ResponseEntity<List<GetOneScheduleResponse>> getAllSchedule(@RequestParam(required = false) String username) {
+    public ResponseEntity<List<GetManyScheduleResponse>> getAllSchedule(@RequestParam(required = false) String username) {
         if (username != null) {
             return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getFilter(username));
         }
