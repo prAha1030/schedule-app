@@ -29,10 +29,7 @@ public class ScheduleController {
     // 일정 다건 조회
     @GetMapping("/schedules")
     public ResponseEntity<List<GetManyScheduleResponse>> getAllSchedule(@RequestParam(required = false) String username) {
-        if (username != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getFilter(username));
-        }
-        else {return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getAll());}
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getAll(username));
     }
 
     // 일정 수정
@@ -43,7 +40,6 @@ public class ScheduleController {
     }
 
     // 일정 삭제
-    // TODO 비밀번호 미일치 시 삭제는 안되지만 응답이 204로 나옴
     @DeleteMapping("/schedules/{scheduleId}")
     public ResponseEntity<Void> deleteSchedule(@PathVariable Long scheduleId,
                                                @RequestBody DeleteScheduleRequest request) {

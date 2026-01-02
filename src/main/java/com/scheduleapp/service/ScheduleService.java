@@ -6,7 +6,6 @@ import com.scheduleapp.entity.Schedule;
 import com.scheduleapp.repository.CommentRepository;
 import com.scheduleapp.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,43 +68,33 @@ public class ScheduleService {
         );
     }
 
-    // 일정 다건 조회 / 전체 / 수정일 기준으로 내림차순 정렬 후 변환
+    // 일정 다건 조회 / 수정일 기준으로 내림차순 정렬 후 변환
     @Transactional(readOnly = true)
-    public List<GetManyScheduleResponse> getAll() {
-        List<Schedule> allSchedules = scheduleRepository.findAll(Sort.by(Sort.Direction.DESC,"modifiedAt"));
-        List<GetManyScheduleResponse> dtos = new ArrayList<>();
-        for (Schedule allSchedule : allSchedules) {
-            GetManyScheduleResponse dto = new GetManyScheduleResponse(
-                    allSchedule.getId(),
-                    allSchedule.getTitle(),
-                    allSchedule.getContents(),
-                    allSchedule.getUsername(),
-                    allSchedule.getCreatedAt(),
-                    allSchedule.getModifiedAt()
-            );
-            dtos.add(dto);
+    public List<GetManyScheduleResponse> getAll(String username) {
+        if (username == null) {
+            // 일정 목록 전체
+            List<Schedule> schedules = scheduleRepository.findByOrderByModifiedAtDesc();
+            return schedules.stream().map(s -> new GetManyScheduleResponse(
+                    s.getId(),
+                    s.getTitle(),
+                    s.getContents(),
+                    s.getUsername(),
+                    s.getCreatedAt(),
+                    s.getModifiedAt()
+            )).toList();
         }
-        return dtos;
-    }
-
-    // 일정 다건 조회 / 특정 작성자명의 일정 목록 / 수정일 기준으로 내림차순 정렬 후 변환
-    @Transactional(readOnly = true)
-    public List<GetManyScheduleResponse> getFilter(String username) {
-        List<Schedule> filterSchedules = scheduleRepository.findAll(Sort.by(Sort.Direction.DESC, "modifiedAt"))
-                .stream().filter(s -> s.getUsername().equals(username)).toList();
-        List<GetManyScheduleResponse> dtos = new ArrayList<>();
-        for (Schedule filterSchedule : filterSchedules) {
-            GetManyScheduleResponse dto = new GetManyScheduleResponse(
-                    filterSchedule.getId(),
-                    filterSchedule.getTitle(),
-                    filterSchedule.getContents(),
-                    filterSchedule.getUsername(),
-                    filterSchedule.getCreatedAt(),
-                    filterSchedule.getModifiedAt()
-            );
-            dtos.add(dto);
+        else {
+            // 특정 작성자명의 일정 목록
+            List<Schedule> schedules = scheduleRepository.findByUsernameOrderByModifiedAtDesc(username);
+            return schedules.stream().map(s -> new GetManyScheduleResponse(
+                    s.getId(),
+                    s.getTitle(),
+                    s.getContents(),
+                    s.getUsername(),
+                    s.getCreatedAt(),
+                    s.getModifiedAt()
+            )).toList();
         }
-        return dtos;
     }
 
     // 일정 수정 후 변환 / 비밀번호 미일치 시 미수정
