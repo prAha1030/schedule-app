@@ -7,7 +7,7 @@
 
 [일정 관리 앱 API 명세서](https://documenter.getpostman.com/view/50311221/2sBXVbHZPM)
 
-![일정 관리 앱 ERD](images/schedule%20app%20ERD.png)
+
 ---
 
 ## Body
