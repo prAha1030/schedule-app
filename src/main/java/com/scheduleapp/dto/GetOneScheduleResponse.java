@@ -1,6 +1,5 @@
 package com.scheduleapp.dto;
 
-import com.scheduleapp.entity.Comment;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
